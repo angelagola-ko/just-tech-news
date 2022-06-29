@@ -77,6 +77,7 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
   // expects {title: 'Taskmaster goes public!', post_url: 'https://taskmaster.com/press', user_id: 1}
+  if (req.session) {
   Post.create({
     title: req.body.title,
     post_url: req.body.post_url,
@@ -87,17 +88,31 @@ router.post('/', (req, res) => {
       console.log(err);
       res.status(500).json(err);
     });
+  }
 });
 
+
 router.put('/upvote', (req, res) => {
-  // custom static method created in models/Post.js
-  Post.upvote({ ...req.body, user_id: req.session.user_id }, { Vote, Comment, User })
-    .then(updatedVoteData => res.json(updatedVoteData))
-    .catch(err => {
-      console.log(err);
-      res.status(500).json(err);
-    });
+  // make sure the session exists first
+  if (req.session) {
+    // pass session id along with all destructured properties on req.body
+    Post.upvote({ ...req.body, user_id: req.session.user_id }, { Vote, Comment, User })
+      .then(updatedVoteData => res.json(updatedVoteData))
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+  }
 });
+// router.put('/upvote', (req, res) => {
+//   // custom static method created in models/Post.js
+//   Post.upvote({ ...req.body, user_id: req.session.user_id }, { Vote, Comment, User })
+//     .then(updatedVoteData => res.json(updatedVoteData))
+//     .catch(err => {
+//       console.log(err);
+//       res.status(500).json(err);
+//     });
+// });
 
 router.put('/:id', (req, res) => {
   Post.update(
