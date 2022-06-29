@@ -4,23 +4,22 @@ async function upvoteClickHandler(event) {
     const id = window.location.toString().split('/')[
       window.location.toString().split('/').length - 1
     ];
-  // CLICK BUTTON NOT WORKING
-    const response = await fetch('api/posts/upvote', {
-        method: 'PUT',
-        body: JSON.stringify({
-            post_id: id
-        }),
-        headers: {
-            'Content-Type' : 'application/json'
-        }
+    const response = await fetch('/api/posts/upvote', {
+      method: 'PUT',
+      body: JSON.stringify({
+        post_id: id
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
     });
-    if(response.ok) {
-        document.location.reload();
+  
+    if (response.ok) {
+      document.location.reload();
     } else {
-        alert(response.statusText);
+      alert(response.statusText);
     }
-    console.log(id);
-    console.log('button clicked');
-}
-
-document.querySelector('.upvote-btn').addEventListener('click', upvoteClickHandler);
+  }
+  
+  document.querySelector('.upvote-btn').addEventListener('click', upvoteClickHandler);
+  
